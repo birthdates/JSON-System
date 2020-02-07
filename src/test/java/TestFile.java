@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 
 public class TestFile extends JSONFile {
 
-    public class Data {
+    public static class Data {
         @SerializedName("Test")
         private String test;
     }
