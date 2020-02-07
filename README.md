@@ -46,7 +46,7 @@ public class TestFile extends JSONFile {
     }
 
     public TestFile(Plugin plugin) {
-        super(Bukkit.getPluginManager().getPlugins()[0], "test.json"); //Recommended to put your own plugin here
+        super(plugin, "test.json");
         getData(Data.class);
     }
 }
