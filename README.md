@@ -14,9 +14,9 @@ This is an example POM that uses JSON System.
     <artifactId>JSONSystemTest</artifactId>
     <version>1.0-SNAPSHOT</version>
     
-    <!--- REQUIRED !--->
+    <!-- REQUIRED !-->
     <repositories>
-        <!--- Add the JSON System repo via GitHub !--->
+        <!-- Add the JSON System repo via GitHub !-->
         <repository>
             <id>jsonsystem-repo</id>
             <url>https://raw.githubusercontent.com/birthdates/JSONSystem/repository/</url>
@@ -24,7 +24,7 @@ This is an example POM that uses JSON System.
     </repositories>
 
     <dependencies>
-        <!--- Add the JSON System dependency and scope compile !--->
+        <!-- Add the JSON System dependency and scope compile !-->
         <dependency>
             <groupId>com.birthdates</groupId>
             <artifactId>JSONSystem</artifactId>
