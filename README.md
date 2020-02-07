@@ -26,7 +26,29 @@ This is an example POM that uses JSON System.
             <groupId>com.birthdates</groupId>
             <artifactId>JSONSystem</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
+```
+This is an example class that would save/load a JSON file (test.json)
+```java
+import com.birthdates.jsonsystem.JSONFile;
+import com.google.gson.annotations.SerializedName;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+
+public class TestFile extends JSONFile {
+
+    public class Data {
+        @SerializedName("Test")
+        private String test;
+    }
+
+    public TestFile(Plugin plugin) {
+        super(Bukkit.getPluginManager().getPlugins()[0], "test.json"); //Recommended to put your own plugin here
+        getData(Data.class);
+    }
+}
+
 ```
