@@ -46,11 +46,19 @@ public class TestFile extends JSONFile {
     public class Data {
         @SerializedName("Test")
         private String test;
+        @GsonIgnore
+        private String formattedTest;
+        
+        public Data(String test) {
+            this.test = test;
+            this.formattedTest = this.test.replace("test", "Test");
+        }
     }
 
     public TestFile(Plugin plugin) {
         super(plugin, "test.json");
         getData(Data.class);
+        
     }
 }
 
