@@ -28,7 +28,7 @@ public class JSONFile {
 
     private void tryLoadFile() {
         if (!this.file.exists()) {
-            plugin.saveResource(fileName + ".json", false);
+            plugin.saveResource(fileName, false);
         }
     }
 
