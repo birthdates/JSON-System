@@ -39,7 +39,7 @@ public class JSONFile {
                 public boolean shouldSkipField(FieldAttributes f) {
                     return f.getAnnotation(GsonIgnore.class) != null;
                 }
-
+                
                 public boolean shouldSkipClass(Class<?> clazz) {
                     return false;
                 }
