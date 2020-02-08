@@ -57,8 +57,7 @@ public class TestFile extends JSONFile {
 
     public TestFile(Plugin plugin) {
         super(plugin, "test.json");
-        getData(Data.class);
-        
+        getData(Data.class); 
     }
 }
 ```
