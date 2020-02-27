@@ -57,7 +57,7 @@ public class JSONFile {
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof JsonParseException) {
-                log(ChatColor.DARK_RED + "ERROR reading one of your JSON files: " + e.getLocalizedMessage().split(":")[1]);
+                log(ChatColor.DARK_RED + "ERROR reading one of your JSON files:" + e.getLocalizedMessage().split(":")[1]);
                 log(ChatColor.DARK_RED + "Please verify your JSON at https://jsonlint.com before reporting this to the developer!");
             } else {
                 e.printStackTrace();
