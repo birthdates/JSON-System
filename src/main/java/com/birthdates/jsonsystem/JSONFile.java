@@ -18,11 +18,21 @@ public class JSONFile {
     private String fileName;
     private File file;
     private Plugin plugin;
+    private Gson gson;
 
     public JSONFile(Plugin plugin, String name) {
         this.fileName = name + ".json";
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), this.fileName);
+        this.gson =  new GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(new ExclusionStrategy() {
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getAnnotation(GsonIgnore.class) != null;
+            }
+
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
         tryLoadFile();
     }
 
@@ -35,15 +45,7 @@ public class JSONFile {
     public void save(Object data) {
         try {
             FileWriter fw = new FileWriter(plugin.getDataFolder() + "/" + fileName);
-            new GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(new ExclusionStrategy() {
-                public boolean shouldSkipField(FieldAttributes f) {
-                    return f.getAnnotation(GsonIgnore.class) != null;
-                }
-                
-                public boolean shouldSkipClass(Class<?> clazz) {
-                    return false;
-                }
-            }).create().toJson(data, fw);
+            gson.toJson(data, fw);
             fw.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +55,7 @@ public class JSONFile {
 
     public <T> T getData(Type type) {
         try {
-            return new GsonBuilder().setPrettyPrinting().create().fromJson(new FileReader(plugin.getDataFolder() + "/" + fileName), type);
+            return gson.fromJson(new FileReader(plugin.getDataFolder() + "/" + fileName), type);
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof JsonParseException) {
