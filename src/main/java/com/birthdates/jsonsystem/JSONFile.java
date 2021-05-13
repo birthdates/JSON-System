@@ -1,11 +1,9 @@
 package com.birthdates.jsonsystem;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -15,36 +13,50 @@ import java.lang.reflect.Type;
 
 public class JSONFile {
 
-    private String fileName;
-    private File file;
-    private Plugin plugin;
-    private Gson gson;
+    private final String fileName;
+    private final File file;
+    private final Plugin plugin;
+    private final Gson gson;
+    private final boolean usePluginFolder;
+
+    public JSONFile(Plugin plugin, String name, boolean usePluginFolder) {
+        this(plugin, name, new File(plugin.getDataFolder(), name + ".json"), usePluginFolder);
+    }
 
     public JSONFile(Plugin plugin, String name) {
-        this.fileName = name + ".json";
+        this(plugin, name, true);
+    }
+
+    public JSONFile(Plugin plugin, String name, File file, boolean usePluginFolder) {
+        this.fileName = name + (name.endsWith(".json") ? "" : ".json");
         this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), this.fileName);
-        this.gson =  new GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(new ExclusionStrategy() {
+        this.file = file;
+        this.gson = new GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(new ExclusionStrategy() {
             public boolean shouldSkipField(FieldAttributes f) {
-                return f.getAnnotation(GsonIgnore.class) != null;
+                return f.hasModifier(0x00000080); //is transient
             }
 
             public boolean shouldSkipClass(Class<?> clazz) {
                 return false;
             }
-        }).create();
+        }).registerTypeAdapter(ItemStack.class, new ItemStackGsonAdapter()).create();
+        this.usePluginFolder = usePluginFolder;
         tryLoadFile();
     }
 
     private void tryLoadFile() {
-        if (!this.file.exists()) {
+        if (!this.file.exists() && usePluginFolder) {
             plugin.saveResource(fileName, false);
         }
     }
 
+    private String getFilePath() {
+        return usePluginFolder ? plugin.getDataFolder() + "/" + fileName : fileName;
+    }
+
     public void save(Object data) {
         try {
-            FileWriter fw = new FileWriter(plugin.getDataFolder() + "/" + fileName);
+            FileWriter fw = new FileWriter(getFilePath());
             gson.toJson(data, fw);
             fw.close();
         } catch (Exception e) {
@@ -52,10 +64,9 @@ public class JSONFile {
         }
     }
 
-
     public <T> T getData(Type type) {
         try {
-            return gson.fromJson(new FileReader(plugin.getDataFolder() + "/" + fileName), type);
+            return gson.fromJson(new FileReader(getFilePath()), type);
         } catch (Exception e) {
             e.printStackTrace();
             if (e instanceof JsonParseException) {
@@ -67,6 +78,10 @@ public class JSONFile {
             }
         }
         return null;
+    }
+
+    public File getFile() {
+        return file;
     }
 
 
