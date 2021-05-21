@@ -9,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
 public class JSONFile {
@@ -33,7 +34,7 @@ public class JSONFile {
         this.file = file;
         this.gson = new GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(new ExclusionStrategy() {
             public boolean shouldSkipField(FieldAttributes f) {
-                return f.hasModifier(0x00000080); //is transient
+                return f.hasModifier(Modifier.TRANSIENT);
             }
 
             public boolean shouldSkipClass(Class<?> clazz) {
